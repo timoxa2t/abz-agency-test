@@ -71,11 +71,11 @@ export const FormSection: React.FC<Props> = ({ setIsUserCreated }) => {
   const [photo, setPhoto] = useState<File>();
 
   useEffect(() => {
-    if (!nameError && !emailError && !phoneError) {
+    if (!nameError && !emailError && !phoneError && !photoError) {
       setIsFormValid(true);
     }
 
-  }, [nameError, emailError, phoneError])
+  }, [nameError, emailError, phoneError, photoError]);
 
   const handleSetName = (newVal: string) => {
     setName(newVal);
