@@ -1,5 +1,4 @@
 import axios from "axios";
-import { User } from "../types/User";
 import { UsersResponse } from "../types/UsersResponce";
 import { CreateuserBody } from "../types/CreateUserBody";
 
@@ -62,7 +61,9 @@ const createUser = async (user: CreateuserBody): Promise<boolean>=> {
   return response.success;
 }
 
-export default {
+const api =  {
   getUsers,
   createUser,
 };
+
+export default api;

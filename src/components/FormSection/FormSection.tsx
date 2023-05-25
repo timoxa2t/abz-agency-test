@@ -33,6 +33,7 @@ const nameValidation = (value: string): string => {
 };
 
 const emailValidation = (value: string): string => {
+  // eslint-disable-next-line no-control-regex
   const RFC2822 = /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/i;
 
   if (!RFC2822.test(value)) {
@@ -107,11 +108,33 @@ export const FormSection: React.FC<Props> = ({ setIsUserCreated }) => {
         return;
       }
 
+
+      let img: HTMLImageElement;
+      const fr = new FileReader();
+
+      const imageLoaded = () => {
+        if (img.width < 70 || img.height < 70) {
+          setPhoto(undefined);
+          setPhotoError('Minimum size is 70x70 px');
+        }
+
+      }
+
+      const createImage = () => {
+        img = document.createElement('img'); 
+        img.onload = imageLoaded;
+        img.style.display = 'none'; 
+        if (typeof fr.result === 'string') {
+          img.src = fr.result;
+          document.body.appendChild(img);
+        }
+      } 
+
+      fr.onload = createImage;
+      fr.readAsDataURL(photo);
+
       setPhoto(photo)
-      setPhotoError('');
-    } else {
-      setPhoto(undefined);
-      setPhotoError('Select photo');
+      setPhotoError('');      
     }
   }
 
