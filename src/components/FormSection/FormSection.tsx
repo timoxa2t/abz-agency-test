@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { FormInput } from '../FormInput';
 import apiService from '../../services/api';
 import { Position } from '../../types/Position';
+import { Loader } from '../Loader';
 
 
 const MAX_FILE_SIZE_KB = 5 * 1024;
@@ -50,6 +51,7 @@ export const FormSection: React.FC<Props> = ({ setIsUserCreated }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [isLoading, setIsloading] = useState(false);
 
   const [nameError, setNameError] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -164,6 +166,7 @@ export const FormSection: React.FC<Props> = ({ setIsUserCreated }) => {
     const posId = positions.find(pos => pos.name === position)?.id || 0;
 
     if (photo) {
+      setIsloading(true);
       apiService.createUser({
         position_id: posId,
         name,
@@ -179,6 +182,8 @@ export const FormSection: React.FC<Props> = ({ setIsUserCreated }) => {
           setEmailError(err.response.data.message);
           setPhoneError(err.response.data.message);
         }
+      }).finally(() => {
+        setIsloading(false);
       });
     }
   };
@@ -294,12 +299,16 @@ export const FormSection: React.FC<Props> = ({ setIsUserCreated }) => {
         </p>
 
         <div className={styles.form__submit}>
-          <MainButton
-            type='submit'
-            disabled={!isFormValid}
-          >
-            Sign up
-          </MainButton>
+          {isLoading
+            ? <Loader />
+            : (
+              <MainButton
+                type='submit'
+                disabled={!isFormValid}
+              >
+                Sign up
+              </MainButton>
+            )}
         </div>
       </form>
     </section>
