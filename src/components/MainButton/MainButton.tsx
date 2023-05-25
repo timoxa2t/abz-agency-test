@@ -9,6 +9,7 @@ interface Props {
   type?: ButtonType
   bigger?: boolean; 
   disabled?: boolean;
+  hidden?: boolean;
 }
 
 export const MainButton:React.FC<PropsWithChildren<Props>> = ({
@@ -16,6 +17,7 @@ export const MainButton:React.FC<PropsWithChildren<Props>> = ({
   type = 'button',
   bigger = false,
   disabled = false,
+  hidden = false,
   children,
 }) => {
   return (
@@ -27,6 +29,7 @@ export const MainButton:React.FC<PropsWithChildren<Props>> = ({
       )}
       onClick={onClickHandler}
       disabled={disabled}
+      hidden={hidden}
     >
       {children}
     </button>

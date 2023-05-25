@@ -20,7 +20,11 @@ const defaultUser: User = {
 
 const placeholderArray: User[] = Array(USERS_PER_PAGE).fill(defaultUser);
 
-export const UsersSection = () => {
+interface Props {
+  resetPages: boolean, 
+}
+
+export const UsersSection: React.FC<Props> = ({ resetPages }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [usersPage, setUsersPage] = useState(1);
   const [hasNext, setHasNext] = useState(true);
@@ -40,7 +44,13 @@ export const UsersSection = () => {
       .finally(() => {
         setIsLoading(false);
       });
-  }, [usersPage]);
+  }, [usersPage, resetPages]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setUsersPage(1);
+    }, 500);
+  }, [resetPages])
 
   return (
     <section
@@ -82,7 +92,7 @@ export const UsersSection = () => {
       <div className={styles['users__show-more']}>
         <MainButton
           onClickHandler={() => setUsersPage(prevPage => prevPage + 1)}
-          disabled={!hasNext}
+          hidden={!hasNext}
           bigger
         >
           Show more

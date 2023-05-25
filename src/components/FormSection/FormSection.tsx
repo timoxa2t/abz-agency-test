@@ -5,22 +5,10 @@ import styles from './FormSection.module.scss';
 import classNames from 'classnames';
 import { FormInput } from '../FormInput';
 import apiService from '../../services/api';
+import { Position } from '../../types/Position';
 
-enum Positions {
-  FrontendDev = 'Frontend developer',
-  BackendDev = 'Backend developer',
-  Design = 'Designer',
-  QA = 'QA',
-}
 
 const MAX_FILE_SIZE_KB = 5 * 1024;
-
-const positionValues = {
-  [Positions.QA]: 1,
-  [Positions.BackendDev]: 2,
-  [Positions.FrontendDev]: 3,
-  [Positions.Design]: 4
-}
 
 const nameValidation = (value: string): string => {
   const regex = /^[A-Z ]{2,60}$/i;
@@ -68,8 +56,20 @@ export const FormSection: React.FC<Props> = ({ setIsUserCreated }) => {
   const [phoneError, setPhoneError] = useState('');
   const [photoError, setPhotoError] = useState('');
 
-  const [position, setPosition] = useState<Positions>(Positions.FrontendDev);
+  const [positions, setPositions] = useState<Position[]>([]);
+  const [position, setPosition] = useState<string>();
   const [photo, setPhoto] = useState<File>();
+
+  useEffect(() => {
+    apiService.getPositions()
+      .then(positionsData => {
+        setPositions(positionsData);
+        
+        if (positionsData.length > 0) {
+          setPosition(positionsData[0].name);
+        }
+      })
+  }, []);
 
   useEffect(() => {
     if (!nameError && !emailError && !phoneError && !photoError) {
@@ -94,7 +94,7 @@ export const FormSection: React.FC<Props> = ({ setIsUserCreated }) => {
   }
 
   const handlePositionChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setPosition(event.target.value as Positions);
+    setPosition(event.target.value);
   };
 
   const handlePhotoChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -161,9 +161,11 @@ export const FormSection: React.FC<Props> = ({ setIsUserCreated }) => {
       return
     }
 
+    const posId = positions.find(pos => pos.name === position)?.id || 0;
+
     if (photo) {
       apiService.createUser({
-        position_id: positionValues[position],
+        position_id: posId,
         name,
         email,
         phone,
@@ -171,6 +173,11 @@ export const FormSection: React.FC<Props> = ({ setIsUserCreated }) => {
       }).then(success => {
         if (success) {
           setIsUserCreated(true)
+        }
+      }).catch(err => {
+        if (err.response.status === 409) {
+          setEmailError(err.response.data.message);
+          setPhoneError(err.response.data.message);
         }
       });
     }
@@ -234,45 +241,17 @@ export const FormSection: React.FC<Props> = ({ setIsUserCreated }) => {
         <fieldset className={styles.form__ragiogroup}>
           <legend className={styles['form__ragiogroup-legend']}>Select your position</legend>
 
-          <div className={styles['form__ragiogroup-item']}>
-            <FormRadiobutton
-              id='frontend-developer'
-              name='position'
-              value={Positions.FrontendDev}
-              handleChange={handlePositionChange}
-              checked={Positions.FrontendDev === position}
-            />
-          </div>
-
-          <div className={styles['form__ragiogroup-item']}>
-            <FormRadiobutton
-              id='backend-developer'
-              name='position'
-              value={Positions.BackendDev}
-              handleChange={handlePositionChange}
-              checked={Positions.BackendDev === position}
-            />
-          </div>
-
-          <div className={styles['form__ragiogroup-item']}>
-            <FormRadiobutton
-              id='designer'
-              name='position'
-              value={Positions.Design}
-              handleChange={handlePositionChange}
-              checked={Positions.Design === position}
-            />
-          </div>
-
-          <div className={styles['form__ragiogroup-item']}>
-            <FormRadiobutton
-              id='qa'
-              name='position'
-              value={Positions.QA}
-              handleChange={handlePositionChange}
-              checked={Positions.QA === position}
-            />
-          </div>
+          {positions.map(({ name, id }) => (
+            <div key={id} className={styles['form__ragiogroup-item']}>
+              <FormRadiobutton
+                id={id.toString()}
+                name='position'
+                value={name}
+                handleChange={handlePositionChange}
+                checked={name === position}
+              />
+            </div>
+          ))}
         </fieldset>
         
         <div className={styles['form__file-box']}>

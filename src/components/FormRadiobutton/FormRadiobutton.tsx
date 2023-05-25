@@ -16,7 +16,6 @@ export const FormRadiobutton: React.FC<Props> = ({
   checked,
   handleChange
 }) => {
-
   return (
     <div className={styles['radio']}>
       <input

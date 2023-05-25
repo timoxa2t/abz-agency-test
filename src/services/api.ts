@@ -1,9 +1,9 @@
 import axios from "axios";
 import { UsersResponse } from "../types/UsersResponce";
 import { CreateuserBody } from "../types/CreateUserBody";
+import { Position } from "../types/Position";
 
 const BASE_URL = 'https://frontend-test-assignment-api.abz.agency/api/v1';
-const TOKEN = 'eyJpdiI6IlFQWUl2YUl5b1ViYmw4OGFxSkdPV3c9PSIsInZhbHVlIjoiblFUbm1abDA2bVNPdCthWXpZRE4xbmhTd1J4VDBYQjBSK2tqenhIb1FqQ2luSkRNWG02UGg0bVRUS1F0KzBoUVdVQUp1UHI1ekp6VzY1bHRWR0tsTlE9PSIsIm1hYyI6IjQxZGMzYWM4YWQ5OTFiZGZhMWZkMTA0OGE4ZGEzMThiZWE3YzQwOGQ3N2ZjMGYyNjM2ZGVkMWI3Mzk1Mzg5OGUifQ==';
 
 async function get<T>(url: string, queryParams: string = ''): Promise<T> {
   const response = await axios.get(BASE_URL + url + queryParams);
@@ -23,6 +23,17 @@ async function post<T>(
     { headers });
 
   return response.data
+}
+
+interface PositionsResponce {
+  success: boolean,
+  positions: Position[],
+}
+
+const getPositions = async (): Promise<Position[]> => {
+  const responce = await get<PositionsResponce>('/positions');
+
+  return responce.positions;
 }
 
 
@@ -54,7 +65,13 @@ const createUser = async (user: CreateuserBody): Promise<boolean>=> {
   formData.append('phone', phone);
   formData.append('photo', photo);
 
-  const headers = { 'Token': TOKEN }
+  const tokenResponce = await get<any>('/token')
+
+  if (!tokenResponce.success) {
+    throw new Error('Can`t get token');
+  }
+
+  const headers = { 'Token': tokenResponce.token }
 
   const response = await post<any>('/users', formData, headers);
    
@@ -63,6 +80,7 @@ const createUser = async (user: CreateuserBody): Promise<boolean>=> {
 
 const api =  {
   getUsers,
+  getPositions,
   createUser,
 };
 

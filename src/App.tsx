@@ -20,7 +20,7 @@ function App() {
         <HomeBanner formRef={formRef} />
 
         <div ref={usersRef}>
-          <UsersSection />
+          <UsersSection resetPages={isUserCreated}/>
         </div>
         
         <div ref={formRef}>
