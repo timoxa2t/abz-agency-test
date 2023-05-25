@@ -1,0 +1,55 @@
+@import '../../styles/index.scss';
+
+
+.radio {
+  display: flex;
+  align-items: center;
+
+  &__input {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    appearance: none;
+
+    &::after {
+      box-sizing: border-box;
+      display: inline-block;
+      position: absolute;
+      cursor: pointer;
+      
+      content: "";
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1px solid #D0CFCF;
+    }
+
+    &::before {
+      display: inline-block;
+      position: absolute;
+      transform: translate(50%, 50%);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      content: "";
+    }
+    
+
+    &:checked {
+
+      &::before {
+        background-color: var(--secondaryColor);
+      }
+
+      &::after {
+        border: 1px solid var(--secondaryColor);
+      }
+    }
+  }
+
+  &__label {
+    display: inline-block;
+    margin-left: 12px;
+    cursor: pointer;
+  }
+}

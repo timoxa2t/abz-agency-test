@@ -1,0 +1,50 @@
+@import '../../styles/index.scss';
+
+.field {
+  position: relative;
+  color: #7E7E7E;
+
+ 
+  &__input {
+    position: relative;
+    box-sizing: border-box;
+    padding-left: 16px;
+    height: 54px;
+    width: 100%;
+    border: 1px solid #D0CFCF;
+    border-radius: 4px;
+    background-color: inherit;
+
+    &:focus {
+      outline: none;
+    }
+  } 
+
+  &__label {
+    padding: 0 4px;
+    background-color: var(--backgroundColor);
+    top: -7px;
+    left: 12px;
+    position: absolute;
+
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+    
+  }
+
+  &__input-helper {
+    position: absolute;
+    padding-left: 16px;
+    font-size: 12px;
+    line-height: 14px;
+  }
+
+  &--error {
+    color: #CB3D40;
+
+    & .field__input {
+      border: 2px solid #CB3D40;
+    }
+  }
+}

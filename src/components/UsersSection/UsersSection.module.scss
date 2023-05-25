@@ -1,0 +1,40 @@
+@import '../../styles/index.scss';
+
+$gap: 16px;
+
+.users {
+
+  &__list {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: $gap;
+    margin-bottom: 50px;
+  }
+
+  &__item {
+    flex-basis: 0;
+    flex-grow: 1;
+    max-width: 100%;
+    min-width: 100%;
+    
+
+    @include onTablet {
+      max-width: card-size(2, $gap);
+      min-width: card-size(2, $gap);
+    }
+
+    @include onDesktop {
+      max-width: card-size(3, $gap);
+      min-width: card-size(3, $gap);
+    }
+  }
+
+  &__palceholder {
+    visibility: hidden;
+  }
+
+  &__show-more {
+    text-align: center;
+  }
+}

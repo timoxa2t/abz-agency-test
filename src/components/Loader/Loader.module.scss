@@ -1,0 +1,34 @@
+@import '../../styles/index.scss';
+
+.loader {
+  padding: 20px;
+
+  &__spinner {
+    margin: auto;
+    width: 48px;
+    height: 48px;
+    background-image: url('../../../public/Preloader.svg');
+    animation: spin 1s infinite linear;
+  }
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
